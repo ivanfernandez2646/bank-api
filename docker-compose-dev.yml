@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./Dockerfile.dev
     ports:
-      - '3000:3000'
+      - 3000:3000
     volumes:
       - .:/usr/src/app
   db:
@@ -16,7 +16,7 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_DB: bank
     ports:
-      - '5432:5432'
+      - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data
 volumes:
