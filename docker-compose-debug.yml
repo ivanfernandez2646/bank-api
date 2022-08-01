@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  node-debug:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.debug
+    ports:
+      - '3000:3000'
+      - '9229:9229'
+    volumes:
+      - .:/usr/src/app
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: bank
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
