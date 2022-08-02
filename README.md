@@ -75,4 +75,5 @@ Nest is [MIT licensed](LICENSE).
 ## Run application
 # dev
 
+npm i
 npm run start:docker-dev
