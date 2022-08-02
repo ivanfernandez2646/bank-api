@@ -8,4 +8,4 @@ COPY package*.json ./
 
 RUN npm install
 
-CMD ["npm", "run", "start:debug"]
+CMD ["nest", "start", "--debug", "0.0.0.0:9229", "--watch"]
