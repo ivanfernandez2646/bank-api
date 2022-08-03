@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppConfigModule } from './configuration/app-config.module';
 import { AppConfigService } from './configuration/app-config.service';
+import { AccountModule } from './entities-manager/account/account.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AppConfigService } from './configuration/app-config.service';
       }),
       inject: [AppConfigService],
     }),
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [AppService],
