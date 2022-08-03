@@ -4,11 +4,14 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.debug
+    environment:
+      NODE_ENV: dev
     ports:
       - 3000:3000
       - 9229:9229
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules/
   db:
     image: postgres
     restart: always
