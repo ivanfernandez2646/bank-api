@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  node-test:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.test
+    environment:
+      NODE_ENV: test
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules/
+  db-test:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - db-test:/var/lib/postgresql/data
+volumes:
+  db-test:
+    driver: local
