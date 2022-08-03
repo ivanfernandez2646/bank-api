@@ -36,5 +36,5 @@ $ npm run start:debug
 $ npm run test
 
 # e2e tests
-$ npm run test:e2e-docker
+$ npm run test:e2e
 ```

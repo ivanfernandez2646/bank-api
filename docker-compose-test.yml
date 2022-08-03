@@ -1,16 +1,5 @@
 version: '3.9'
 services:
-  node-test:
-    build:
-      context: .
-      dockerfile: ./Dockerfile.test
-    environment:
-      NODE_ENV: test
-    ports:
-      - 3000:3000
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules/
   db-test:
     image: postgres
     restart: always
