@@ -3,7 +3,6 @@ import * as Joi from 'joi';
 import dbConfig from './dbConfig';
 import globalConfig from './globalConfig';
 
-// TODO: change in a future for different .env files
 const configModuleOptions: ConfigModuleOptions = {
   load: [globalConfig, dbConfig],
   isGlobal: true,
@@ -16,7 +15,7 @@ const configModuleOptions: ConfigModuleOptions = {
     DATABASE_PASSWORD: Joi.string().required(),
     DATABASE_SYNCHRONIZE: Joi.bool().default(false),
   }),
-  envFilePath: `.dev.env`,
+  envFilePath: `.env.${process.env.NODE_ENV}`,
 };
 
 export default configModuleOptions;
