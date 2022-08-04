@@ -14,8 +14,8 @@ export class AccountController {
     description: 'Account generated',
     status: HttpStatus.OK,
   })
-  generateRandom(): Promise<Account> {
-    return this.accountService.generateRandom();
+  async generateRandom(): Promise<Account> {
+    return this.accountService.generateRandomAccount();
   }
 
   @Get()
@@ -25,7 +25,7 @@ export class AccountController {
     description: 'Accounts',
     status: HttpStatus.OK,
   })
-  findAll(): Promise<Account[]> {
+  async findAll(): Promise<Account[]> {
     return this.accountService.findAll();
   }
 
@@ -38,7 +38,7 @@ export class AccountController {
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
   })
-  findOne(@Param('id') id: string): Promise<Account> {
+  async findOne(@Param('id') id: string): Promise<Account> {
     return this.accountService.findOne(id);
   }
 }
