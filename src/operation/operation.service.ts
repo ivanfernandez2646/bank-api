@@ -20,6 +20,12 @@ export class OperationService extends BaseService<
     super(operationRepository);
   }
 
+  /**
+   * Save operation for an account
+   * @param createOperationDto
+   * @param type
+   * @returns operation saved in BBDD
+   */
   async saveOperation(
     createOperationDto: CreateOperationDto,
     type: OperationType,
@@ -42,6 +48,12 @@ export class OperationService extends BaseService<
     return res;
   }
 
+  /**
+   * Check if withdraw is available given the currentBalance of the account
+   * @param amount
+   * @param currentBalance
+   * @throws {BadRequestException}
+   */
   checkWithdrawAvailable(amount: number, currentBalance: number) {
     const leftAmount = currentBalance - amount;
     if (leftAmount < 0) {

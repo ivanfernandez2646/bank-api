@@ -16,6 +16,10 @@ export class AccountService extends BaseService<Account, CreateAccountDto> {
     super(accountRepository);
   }
 
+  /**
+   * Generate random account entity
+   * @returns account saved in BBDD
+   */
   generateRandomAccount(): Promise<Account> {
     const newIban = this.generateIban();
     const createAccountDto: CreateAccountDto = { iban: newIban };
@@ -23,6 +27,13 @@ export class AccountService extends BaseService<Account, CreateAccountDto> {
     return res;
   }
 
+  /**
+   * Find and retrive an account given an id
+   * @param id
+   * @param options
+   * @param throwError
+   * @returns account with his currentBalance calculated
+   */
   async findOne(
     id: string,
     options?: FindOneOptions<any>,
@@ -37,6 +48,11 @@ export class AccountService extends BaseService<Account, CreateAccountDto> {
     return account;
   }
 
+  /**
+   * Find and retrive all accounts
+   * @param options
+   * @returns accounts with his currentBalance calculated
+   */
   async findAll(options?: FindManyOptions<any>): Promise<Account[]> {
     const accounts = await super.findAll({
       ...options,
@@ -50,6 +66,11 @@ export class AccountService extends BaseService<Account, CreateAccountDto> {
   }
 
   // TODO: in a future it will be stored in BBDD. for now it will be calculated to avoid spend so much time
+  /**
+   * Calculate balance for an account given its operations
+   * @param operations
+   * @returns balance number with 2 decimal popsitions
+   */
   calculateBalance(operations: Operation[]): number {
     const amounts = operations.map((op) =>
       op.type === OperationType.DEPOSIT ? op.amount : -op.amount,
@@ -66,6 +87,10 @@ export class AccountService extends BaseService<Account, CreateAccountDto> {
     return balance;
   }
 
+  /**
+   * Generate random IBAN (spanish)
+   * @returns random spanish IBAN
+   */
   generateIban(): string {
     const random11DigitString = () =>
       String(Math.floor(Math.random() * 100000000000)).padStart(11, '0');
