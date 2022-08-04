@@ -9,7 +9,7 @@ import { Utils } from './utils/utils';
 describe('AccountController (e2e)', () => {
   let app: INestApplication;
   let accountRepository: Repository<Account>;
-  let accountId: string;
+  let newEmptyAccountId: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -36,16 +36,18 @@ describe('AccountController (e2e)', () => {
     expect(account.iban).toMatch(/^ES\d{22}$/);
     const accountBBDD = await accountRepository.findOne({ id: account.id });
     expect(accountBBDD).toMatchObject(account);
-    accountId = account.id;
+    newEmptyAccountId = account.id;
   });
 
   describe('/:id(GET)', () => {
-    it('when id is found account object must be returned', async () => {
+    it('when id is found an account object must be returned', async () => {
       const res = await request(app.getHttpServer()).get(
-        `/account/${accountId}`,
+        `/account/${newEmptyAccountId}`,
       );
       const account: Account = res.body;
       const accountBBDD = await accountRepository.findOne({ id: account.id });
+      accountBBDD.currentBalance = 0;
+      accountBBDD.operations = [];
       expect(accountBBDD).toMatchObject(account);
     });
     it('when id is not found an exception must be returned', async () => {
