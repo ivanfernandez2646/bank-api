@@ -6,8 +6,8 @@ import { BaseServiceInterface } from './base-service.interface';
 export class BaseService<E, CRDTO> implements BaseServiceInterface {
   constructor(private repository: Repository<E>) {}
 
-  async save(createDto: CRDTO): Promise<E> {
-    const newResource = this.repository.create(createDto as any);
+  async save(createObject: CRDTO | E): Promise<E> {
+    const newResource = this.repository.create(createObject as any);
     const res = await this.repository.save(newResource as any);
     return res;
   }
