@@ -8,7 +8,10 @@ export class CreateOperationDto {
   })
   @IsOptional()
   @Min(0.01)
-  @IsNumber()
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    { message: 'amount max decimal places limited to 2' },
+  )
   amount?: number;
 
   @ApiProperty({ description: 'Destination account id' })
