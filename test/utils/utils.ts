@@ -27,7 +27,7 @@ export class Utils {
   }
 
   static async closeAppE2ETest(app: INestApplication) {
-    //await getConnection().dropDatabase();
+    await getConnection().dropDatabase();
     await app.close();
   }
 
