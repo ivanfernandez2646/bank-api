@@ -1,7 +1,8 @@
-import { ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { AppConfigService } from './configuration/app-config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,16 @@ async function bootstrap() {
     }),
   );
 
+  initializeSwagger(app);
+
+  const appConfigService = app.get<AppConfigService>(AppConfigService);
+  const port = appConfigService.getAppPort();
+
+  await app.listen(port);
+  console.log(`Application is running on: ${port}`);
+}
+
+function initializeSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('Mini Bank')
     .setDescription('Bank API')
@@ -21,9 +32,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-
-  // TODO: create AppConfigService and set PORT in .env file
-  await app.listen(3000);
-  console.log(`Application is running on: 3000`);
 }
+
 bootstrap();
