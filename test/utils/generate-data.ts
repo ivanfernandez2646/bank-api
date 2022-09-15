@@ -1,5 +1,4 @@
 import { INestApplication } from '@nestjs/common';
-import { Connection } from 'typeorm';
 import { AccountService } from '../../src/entities-manager/account/account.service';
 import { CreateAccountDto } from '../../src/entities-manager/account/dto/create-account.dto';
 import { Account } from '../../src/entities-manager/account/entities/account.entity';
@@ -12,13 +11,13 @@ const countRandomData = 10;
 export const accountsMock: Account[] = [];
 export const operationsMock: Operation[] = [];
 
-export async function generateData(app: INestApplication, conn: Connection) {
-  await insertAccounts(app, conn);
-  await insertOperations(app, conn);
+export async function generateData(app: INestApplication) {
+  await insertAccounts(app);
+  await insertOperations(app);
 }
 
-async function insertAccounts(app: INestApplication, conn: Connection) {
-  const accountsRepository = conn.getRepository(Account);
+async function insertAccounts(app: INestApplication) {
+  const accountsRepository = Utils.dataSource.getRepository(Account);
   const accountsService = app.get<AccountService>(AccountService);
   for (let i = 0; i < countRandomData; i++) {
     const account: CreateAccountDto = { iban: accountsService.generateIban() };
@@ -27,8 +26,8 @@ async function insertAccounts(app: INestApplication, conn: Connection) {
   await accountsRepository.save(accountsMock);
 }
 
-async function insertOperations(app: INestApplication, conn: Connection) {
-  const operationRepository = conn.getRepository(Operation);
+async function insertOperations(app: INestApplication) {
+  const operationRepository = Utils.dataSource.getRepository(Operation);
   for (let i = 0; i < countRandomData; i++) {
     const operation: CreateOperationDto = {
       amount: Utils.chance.floating({ min: 0.01, max: 9999, fixed: 2 }),

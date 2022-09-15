@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AccountModule } from '../../src/entities-manager/account/account.module';
 import { Account } from '../../src/entities-manager/account/entities/account.entity';
 import { CreateOperationDto } from '../../src/operation/dto/create-operation.dto';
@@ -22,8 +22,8 @@ describe('Integration (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await Utils.initializeAppE2ETest(app);
 
-    accountRepository = getRepository(Account);
-    operationRepository = getRepository(Operation);
+    accountRepository = Utils.dataSource.getRepository(Account);
+    operationRepository = Utils.dataSource.getRepository(Operation);
   });
 
   afterAll(async () => {
@@ -53,7 +53,9 @@ describe('Integration (e2e)', () => {
     const res = await request(app.getHttpServer()).get('/account/random');
     expect(res.status).toBe(HttpStatus.OK);
     const account: Account = res.body;
-    const accountBBDD = await accountRepository.findOne({ id: account.id });
+    const accountBBDD = await accountRepository.findOne({
+      where: { id: account.id },
+    });
     expect(accountBBDD).toMatchObject(account);
     return account;
   }

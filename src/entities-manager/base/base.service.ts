@@ -37,10 +37,13 @@ export class BaseService<E, CRDTO> implements BaseServiceInterface {
    */
   async findOne(
     id: string,
-    options?: FindOneOptions,
+    options?: FindOneOptions<any>,
     throwError = true,
   ): Promise<E> {
-    const res = await this.repository.findOne(id, options);
+    const res = await this.repository.findOne({
+      ...{ where: { id } as any },
+      ...options,
+    } as FindOneOptions<E>);
     if (!res && throwError) {
       throw new NotFoundException(`id ${id} not found`);
     }

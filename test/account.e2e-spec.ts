@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AccountModule } from '../src/entities-manager/account/account.module';
 import { Account } from '../src/entities-manager/account/entities/account.entity';
 import { Utils } from './utils/utils';
@@ -19,7 +19,7 @@ describe('AccountController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await Utils.initializeAppE2ETest(app);
 
-    accountRepository = getRepository(Account);
+    accountRepository = Utils.dataSource.getRepository(Account);
   });
 
   afterAll(async () => {
@@ -34,7 +34,9 @@ describe('AccountController (e2e)', () => {
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
     ); // regex for uuid
     expect(account.iban).toMatch(/^ES\d{22}$/);
-    const accountBBDD = await accountRepository.findOne({ id: account.id });
+    const accountBBDD = await accountRepository.findOne({
+      where: { id: account.id },
+    });
     expect(accountBBDD).toMatchObject(account);
     newEmptyAccountId = account.id;
   });
@@ -45,7 +47,9 @@ describe('AccountController (e2e)', () => {
         `/account/${newEmptyAccountId}`,
       );
       const account: Account = res.body;
-      const accountBBDD = await accountRepository.findOne({ id: account.id });
+      const accountBBDD = await accountRepository.findOne({
+        where: { id: account.id },
+      });
       accountBBDD.currentBalance = 0;
       accountBBDD.operations = [];
       expect(accountBBDD).toMatchObject(account);

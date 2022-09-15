@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AccountModule } from '../src/entities-manager/account/account.module';
 import { CreateOperationDto } from '../src/operation/dto/create-operation.dto';
 import { Operation } from '../src/operation/entities/operation.entity';
@@ -21,7 +21,7 @@ describe('OperationController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await Utils.initializeAppE2ETest(app);
 
-    operationRepository = getRepository(Operation);
+    operationRepository = Utils.dataSource.getRepository(Operation);
   });
 
   afterAll(async () => {
@@ -55,7 +55,7 @@ describe('OperationController (e2e)', () => {
       expect(operation.id).not.toBeUndefined();
       expect(operation.accountId).toBe(createOperationDto.accountId);
       const operationBBDD = await operationRepository.findOne({
-        id: operation.id,
+        where: { id: operation.id },
       });
 
       // format date from BBDD to ISO string because the format in the output DTO for a date is an string
@@ -93,7 +93,7 @@ describe('OperationController (e2e)', () => {
       expect(operation.id).not.toBeUndefined();
       expect(operation.accountId).toBe(createOperationDto.accountId);
       const operationBBDD = await operationRepository.findOne({
-        id: operation.id,
+        where: { id: operation.id },
       });
 
       // format date from BBDD to ISO string because the format in the output DTO for a date is an string
