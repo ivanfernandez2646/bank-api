@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+  - 16
+dist: trusty
+branches:
+  only:
+    - chore--travisIntegration
+cache:
+  directories:
+    - node_modules
+env:
+  - NODE_ENV=ci
+services:
+  - postgresql
+install:
+  - npm install
+before_script:
+  - psql -c "CREATE DATABASE bank_ci_test;" -U postgres
+  - psql -c "CREATE USER ivan WITH PASSWORD 'user1234ci';" -U postgres
+  - psql -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";' -U postgres -d bank_ci_test
+jobs:
+  include:
+    - stage: Unit Test
+      script:
+        - npm run test
+    - stage: E2E and Integration Test
+      script:
+        - npm run test:e2e-travis
